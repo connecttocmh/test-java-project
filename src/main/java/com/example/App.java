@@ -1,6 +1,8 @@
 package com.example;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class App {
@@ -14,6 +16,8 @@ public class App {
         filterStringWithStream();
 
         addTwoListsWithStream();
+
+        findRepeatedPrimesWithStream();
     }
 
     public static int add(int a, int b) {
@@ -64,5 +68,25 @@ public class App {
                 .toList();
 
         System.out.println("Combined List: " + combined);
+    }
+
+    private static void findRepeatedPrimesWithStream() {
+        List<Integer> numbers = List.of(2, 3, 5, 7, 3, 11, 2, 13, 5, 5, 4, 6, 8);
+        List<Integer> repeatedPrimes = numbers.stream()
+                .filter(App::isPrime)
+                .collect(Collectors.groupingBy(n -> n, Collectors.counting()))
+                .entrySet().stream()
+                .filter(e -> e.getValue() > 1)
+                .map(Map.Entry::getKey)
+                .toList();
+        System.out.println("Repeated prime numbers: " + repeatedPrimes);
+    }
+
+    private static boolean isPrime(int n) {
+        if (n < 2) return false;
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) return false;
+        }
+        return true;
     }
 }
